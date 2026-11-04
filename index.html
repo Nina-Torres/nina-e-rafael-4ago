@@ -1,0 +1,713 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Nina e Rafael</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,500&family=Figtree:wght@400;500;600&family=VT323&display=swap">
+<style>
+[hidden]{display:none!important}
+body{margin:0}
+img{max-width:100%}
+
+/* Layout: uma coluna estreita alinhada à esquerda, com uma linha do tempo vertical. Cada capítulo é marcado por uma data real da história deles. */
+:root{
+  --bg:#150d14;
+  --bg2:#211623;
+  --ink:#f6ebe6;
+  --muted:#c2abb6;
+  --rose:#f2899f;
+  --rose-ink:#2b1019;
+  --gold:#ecc878;
+  --paper:#f4e9db;
+  --paper-ink:#2b1c22;
+  --line:rgba(246,235,230,.16);
+  --f-display:"Fraunces",Georgia,"Times New Roman",serif;
+  --f-body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-game:"VT323",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:var(--f-body);font-size:17px;line-height:1.65;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 5rem;
+  overflow-x:clip;
+}
+main{max-width:40rem;margin-inline:auto}
+p{margin:0 0 1rem;max-width:36rem}
+b,strong{font-weight:600}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+img{display:block;max-width:100%}
+
+/* ---------- abertura ---------- */
+.intro{
+  position:fixed;inset:0;z-index:60;display:flex;align-items:flex-end;
+  padding:0 max(20px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 2.2rem) max(20px,env(safe-area-inset-left,0px));
+  background:
+    linear-gradient(180deg,rgba(21,13,20,.15) 0%,rgba(21,13,20,.55) 45%,rgba(21,13,20,.96) 100%),
+    url("fotos/sparkle.jpg") center 20%/cover no-repeat,var(--bg);
+  transition:opacity .7s ease,visibility .7s;
+}
+.intro.gone{opacity:0;visibility:hidden}
+.intro-in{max-width:40rem;width:100%;margin-inline:auto}
+.eyebrow{font-family:var(--f-game);font-size:1.45rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);line-height:1}
+.intro h1{
+  font-family:var(--f-display);font-style:italic;font-weight:500;
+  font-size:clamp(3rem,15vw,5.6rem);line-height:.95;margin:.5rem 0 1rem;letter-spacing:-.01em;
+}
+.intro p{color:var(--ink);opacity:.9}
+.btn{
+  display:inline-flex;align-items:center;gap:.6rem;
+  background:var(--rose);color:var(--rose-ink);border:0;border-radius:999px;
+  padding:.85rem 1.5rem;font-weight:600;font-size:1rem;
+  transition:transform .15s ease,background .2s;
+}
+.btn:hover{background:#f7a0b3}
+.btn:active{transform:scale(.97)}
+.btn[disabled]{opacity:.65;cursor:default}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{background:rgba(246,235,230,.07)}
+
+/* ---------- player ---------- */
+.pill{
+  position:fixed;z-index:40;
+  top:calc(env(safe-area-inset-top,0px) + 12px);
+  right:max(12px,env(safe-area-inset-right,0px));
+  display:flex;align-items:center;gap:.55rem;
+  background:rgba(33,22,35,.86);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border:1px solid var(--line);border-radius:999px;padding:.4rem .9rem .4rem .6rem;
+  font-size:.82rem;color:var(--ink);
+}
+.eq{display:flex;gap:2px;align-items:flex-end;height:14px;width:16px}
+.eq i{flex:1;background:var(--rose);border-radius:1px;height:4px}
+.pill.on .eq i{animation:eq 1s ease-in-out infinite}
+.pill.on .eq i:nth-child(2){animation-delay:.2s}
+.pill.on .eq i:nth-child(3){animation-delay:.4s}
+@keyframes eq{0%,100%{height:4px}50%{height:14px}}
+
+/* ---------- capítulos ---------- */
+.top{padding:5.5rem 0 0}
+.top h1{
+  font-family:var(--f-display);font-weight:500;font-style:italic;
+  font-size:clamp(2.6rem,11vw,4rem);line-height:1;margin:.6rem 0 1.2rem;text-wrap:balance;
+}
+.lead{font-size:1.15rem;color:var(--muted)}
+.ch{
+  position:relative;margin-left:.4rem;padding:4rem 0 .5rem 1.5rem;
+  border-left:1px solid var(--line);
+}
+.ch::before{
+  content:"";position:absolute;left:-5px;top:4.55rem;width:9px;height:9px;border-radius:50%;
+  background:var(--rose);box-shadow:0 0 0 5px rgba(242,137,159,.17);
+}
+.when{font-family:var(--f-game);font-size:1.5rem;letter-spacing:.09em;color:var(--rose);line-height:1;text-transform:uppercase}
+h2{
+  font-family:var(--f-display);font-weight:500;
+  font-size:clamp(1.9rem,7vw,2.6rem);line-height:1.08;margin:.35rem 0 1.2rem;text-wrap:balance;
+}
+h2 em{font-style:italic;color:var(--gold)}
+.reveal{transform:translateY(18px);transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{transform:none}
+.note{font-size:.9rem;color:var(--muted)}
+.quote{
+  margin:1.4rem 0;padding:.2rem 0 .2rem 1.1rem;border-left:2px solid var(--rose);
+  font-family:var(--f-display);font-style:italic;font-size:1.3rem;line-height:1.4;max-width:30rem;
+}
+
+/* jogo */
+.game{background:#0d0810;border:1px solid #3d2943;border-radius:6px;margin:1.2rem 0 .6rem;overflow:hidden;font-family:var(--f-game);font-size:1.5rem;line-height:1.2}
+.game-head{display:flex;justify-content:space-between;gap:1rem;padding:.45rem .8rem;background:#2b1b31;color:var(--gold);font-size:1.2rem;border-bottom:1px solid #3d2943}
+.game-log{padding:.9rem .8rem;display:flex;flex-direction:column;gap:.55rem;min-height:9.5rem;margin:0;padding-left:.8rem;list-style:none}
+.msg{animation:pop .35s ease both;overflow-wrap:anywhere}
+.msg .who{color:var(--gold)}
+.msg.nina .who{color:var(--rose)}
+.msg .who::after{content:": ";color:var(--muted)}
+.game-foot{padding:.6rem .8rem;border-top:1px solid #3d2943;display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.game-foot .tip{color:var(--muted);font-size:1.15rem}
+.game-foot button{
+  font-family:var(--f-game);font-size:1.3rem;background:transparent;color:var(--gold);
+  border:1px solid var(--gold);border-radius:4px;padding:.15rem .8rem;
+}
+.game-foot button:hover{background:rgba(236,200,120,.12)}
+.game-foot button[hidden]{display:none}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.xp{margin:1.6rem 0;max-width:28rem}
+.xp-top{display:flex;justify-content:space-between;font-family:var(--f-game);font-size:1.3rem;color:var(--gold);line-height:1;margin-bottom:.35rem}
+.xp-bar{height:12px;border:1px solid #6a4a5f;border-radius:2px;padding:2px;background:#0d0810}
+.xp-bar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--rose-ink),var(--rose));transform-origin:left;border-radius:1px}
+.xp.go .xp-bar i{animation:fill 2.2s cubic-bezier(.3,.7,.2,1)}
+@keyframes fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+/* declaração */
+.paper{
+  background:var(--paper);color:var(--paper-ink);border-radius:3px;
+  padding:1.5rem 1.4rem 1.3rem;margin:1.4rem 0;max-width:30rem;position:relative;
+  box-shadow:0 18px 40px -18px rgba(0,0,0,.7);transform:rotate(-.8deg);
+}
+.paper .label{font-family:var(--f-game);font-size:1.25rem;letter-spacing:.12em;text-transform:uppercase;color:#8a6b5d;line-height:1}
+.paper .decl{font-family:var(--f-display);font-size:1.35rem;line-height:1.45;margin:.7rem 0 1.6rem}
+.sigline{border-top:1px solid #b79f8e;padding-top:.35rem;margin-top:1.1rem;min-height:2.4rem;font-family:var(--f-display);font-style:italic;font-size:1.3rem}
+.sigline small{display:block;font-family:var(--f-body);font-style:normal;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#8a6b5d}
+#sig2 span{display:inline-block;clip-path:inset(0 100% 0 0);transition:clip-path 1.4s steps(14)}
+#sig2.on span{clip-path:inset(0 0 0 0)}
+.stamp{
+  position:absolute;right:.9rem;bottom:1rem;border:2px solid #b3475f;color:#b3475f;border-radius:4px;
+  padding:.2rem .6rem;font-family:var(--f-game);font-size:1.2rem;letter-spacing:.08em;text-transform:uppercase;line-height:1.1;
+  transform:rotate(-8deg) scale(1.12);opacity:0;transition:opacity .4s ease .9s,transform .4s ease .9s;pointer-events:none;
+}
+.stamp.on{opacity:.9;transform:rotate(-8deg) scale(1)}
+
+/* foto em moldura */
+.frame{
+  background:#f6efe9;padding:.55rem .55rem 1.6rem;border-radius:2px;margin:1.6rem 0;max-width:19rem;
+  box-shadow:0 18px 40px -16px rgba(0,0,0,.75);transform:rotate(1.4deg);
+}
+.frame.left{transform:rotate(-1.6deg)}
+.frame img{width:100%;height:auto}
+.frame.wide{max-width:30rem}
+.frame figcaption{font-family:var(--f-display);font-style:italic;color:#4a3640;font-size:.95rem;padding-top:.6rem}
+
+/* anel */
+.ring-wrap{display:flex;align-items:center;gap:1rem;margin:1.2rem 0;flex-wrap:wrap}
+.ring{background:none;border:0;padding:0;width:220px;max-width:70vw;border-radius:50%}
+.ring svg{display:block;width:100%;height:auto}
+
+/* mapa */
+.map{border:1px solid var(--line);border-radius:10px;background:var(--bg2);padding:1rem 1rem 1.1rem;margin:1.4rem 0;max-width:30rem}
+.map svg{display:block;width:100%;height:auto;max-height:22rem}
+.km{display:flex;align-items:baseline;gap:.5rem;font-family:var(--f-display);margin:.2rem 0 .6rem}
+.km strong{font-size:2.4rem;font-weight:500;font-variant-numeric:tabular-nums;line-height:1}
+.km span{color:var(--muted);font-size:.95rem}
+input[type=range]{width:100%;accent-color:var(--rose);height:2rem;margin:.4rem 0 0}
+.map-msg{min-height:3.2rem;margin:.6rem 0 0;color:var(--muted);font-size:.98rem}
+.map.done .map-msg{color:var(--gold)}
+.pulse{animation:pulse 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.7);opacity:0}}
+
+/* contador */
+.count{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem;max-width:26rem;margin:1.4rem 0 1rem}
+.cell{background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:.7rem .8rem}
+.cell b{display:block;font-family:var(--f-display);font-weight:500;font-size:2rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.cell span{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.day4{margin:.8rem 0;padding:.7rem 1rem;border:1px solid var(--rose);border-radius:8px;color:var(--rose);max-width:26rem;font-family:var(--f-display);font-style:italic;font-size:1.15rem}
+
+/* álbum */
+.album{
+  display:flex;gap:1.1rem;align-items:flex-start;overflow-x:auto;scroll-snap-type:x mandatory;
+  margin:1.4rem 0 .4rem -1.5rem;padding:.6rem 1.5rem 1.4rem;
+  scrollbar-width:thin;scrollbar-color:#6a4a5f transparent;
+}
+.album .frame{flex:0 0 min(74%,15.5rem);margin:0;scroll-snap-align:center}
+.album .frame:nth-child(even){transform:rotate(-1.5deg)}
+.album .frame:nth-child(odd){transform:rotate(1.2deg)}
+
+/* cartas */
+.letters{display:grid;gap:.7rem;margin:1.4rem 0;max-width:32rem}
+.letter{border:1px solid var(--line);border-radius:10px;background:var(--bg2);overflow:hidden}
+.letter>button{
+  width:100%;display:flex;align-items:center;justify-content:space-between;gap:1rem;text-align:left;
+  background:none;border:0;padding:1rem 1.1rem;font-family:var(--f-display);font-size:1.15rem;line-height:1.3;
+}
+.letter>button svg{flex:none;width:22px;height:22px;transition:transform .3s}
+.letter.open>button svg{transform:rotate(180deg)}
+.letter .body{padding:0 1.1rem 1.1rem;color:var(--ink)}
+.letter .body p{margin:0 0 .7rem}
+.letter .body p:last-child{margin:0}
+.letter.lock>button{color:var(--muted)}
+.letter.shake{animation:shake .45s}
+@keyframes shake{20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+
+/* senha da carta */
+.pw{margin:.4rem 0 0}
+.pwrow{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.3rem}
+.pwrow input{flex:1 1 11rem;min-width:0;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:.7rem 1.1rem;font:inherit}
+.pwrow input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.pwmsg{min-height:1.4rem;margin:.5rem 0 0}
+.secret p{font-family:var(--f-display);font-size:1.2rem;line-height:1.55;margin:0 0 1rem}
+.secret .big{font-style:italic;font-size:1.45rem;color:var(--gold)}
+.secret .sig{font-style:italic;color:var(--rose);font-size:1.5rem;margin-top:1.2rem}
+
+/* final */
+.final h2{font-size:clamp(2.2rem,9vw,3.4rem)}
+.sign{font-family:var(--f-display);font-style:italic;font-size:1.6rem;margin-top:1.8rem}
+.heart{position:fixed;z-index:70;pointer-events:none;color:var(--rose);animation:float 1.6s ease-out forwards;font-size:1.4rem;line-height:1}
+@keyframes float{from{opacity:1;transform:translate(0,0) scale(.6)}to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1.4)}}
+footer{margin:4rem 0 0 .4rem;padding-left:1.5rem;color:var(--muted);font-size:.85rem}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .reveal{transform:none}
+}
+@media (max-width:420px){
+  body{font-size:16.5px}
+  .ch{padding-left:1.2rem}
+  .album{margin-left:-1.2rem;padding-left:1.2rem}
+}
+</style>
+</head>
+<body>
+
+
+<audio id="song" src="musica.mp3" preload="auto" loop></audio>
+
+<!-- abertura -->
+<section class="intro" id="intro" aria-label="Abertura">
+  <div class="intro-in">
+    <div class="eyebrow">Para o Rafael</div>
+    <h1>Nina<br>&amp; Rafael</h1>
+    <p>Uma história em capítulos, do jeito que eu lembro. Ligue o som.</p>
+    <button class="btn" id="startBtn" type="button">
+      Começar
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+</section>
+
+<button class="pill" id="pill" type="button" aria-pressed="false" aria-label="Tocar ou pausar a música">
+  <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
+  <span><span class="lbl">Tocar</span> · Meu Anjo da Guarda</span>
+</button>
+
+<main>
+  <header class="top">
+    <div class="eyebrow">04.08.2017 até hoje</div>
+    <h1>A nossa história</h1>
+    <p class="lead">Começou com uma provocação num jogo e virou a melhor coisa que me aconteceu. Role a página, toque nas coisas e lembre comigo.</p>
+  </header>
+
+  <!-- 1. o jogo -->
+  <section class="ch" aria-labelledby="h-jogo">
+    <div class="when">Antes de tudo</div>
+    <h2 id="h-jogo" class="reveal">Cidade do Halloween, <em>Warspear Online</em></h2>
+    <p class="reveal">Eu era iniciante, parada com a minha personagem na cidade. Eu lembro como se fosse hoje: chegou uma mensagem no privado.</p>
+
+    <div class="game reveal" role="group" aria-label="Conversa no jogo, reconstituída">
+      <div class="game-head"><span>Mensagem privada</span><span>Cidade do Halloween</span></div>
+      <ul class="game-log" id="gameLog" aria-live="polite">
+        <li class="msg"><span class="who">Rafael</span>Ei, Shemali, vende a conta?</li>
+      </ul>
+      <div class="game-foot">
+        <span class="tip" id="gameTip">toque para responder</span>
+        <button type="button" id="gameNext">Continuar</button>
+      </div>
+    </div>
+    <p class="note">Reconstituído do jeito que eu lembro.</p>
+
+    <p class="reveal">Eu não lembro direito como a conversa seguiu. Acho que você mesmo explicou o que era Shemali. Fiquei com tanta raiva que peguei o seu número de WhatsApp e mandei mensagem, com a minha foto de perfil, só pra provar que eu era eu.</p>
+    <p class="reveal">Começou com uma provocação. E a gente nunca mais parou de conversar.</p>
+    <p class="reveal">Virei sua melhor amiga, e você o meu melhor amigo. Sem segundas intenções, com muita inocência. Você tinha seus relacionamentos e eu te aconselhava, eu tinha os meus e você me aconselhava.</p>
+    <p class="reveal">Era uma fase difícil da minha vida. O jogo virou o meu refúgio e você estava lá: a gente jogava junto, subia as contas, um ajudando o outro.</p>
+
+    <div class="xp reveal" id="xp" aria-label="Barra de amizade completa">
+      <div class="xp-top"><span>Amizade</span><span>nível máximo</span></div>
+      <div class="xp-bar"><i></i></div>
+    </div>
+
+    <p class="reveal">Depois vieram os ciúmes bobos. Quando você falava de alguma menina eu ficava estranha e não dizia nada. Você começou a perguntar se eu estava bem, se eu tinha comido. E eu também comecei a me preocupar com o seu bem-estar.</p>
+    <p class="reveal">Até que um dia, do meu jeito direto, eu disse que a nossa amizade não era mais a mesma. Que a gente decidisse o que fazer com aquele sentimento ou parasse de ser amigo, porque amizade daquele jeito não dava mais. Você ainda falou que éramos “só amigos que se gostam”.</p>
+    <p class="quote reveal">Nem você acreditou.</p>
+  </section>
+
+  <!-- 2. a declaração -->
+  <section class="ch" aria-labelledby="h-2017">
+    <div class="when">04 de agosto de 2017</div>
+    <h2 id="h-2017" class="reveal">A declaração</h2>
+    <p class="reveal">Você me pediu em namoro por mensagem, num texto em forma de declaração. Engraçado e muito você.</p>
+
+    <div class="paper reveal">
+      <div class="label">Declaração</div>
+      <p class="decl">Eu declaro que Rafael Fernandes e Nina Torres são namorados a partir de hoje, do dia 4 de agosto de 2017.</p>
+      <div class="sigline"><span>Rafael Fernandes</span><small>assinado por ele</small></div>
+      <div class="sigline" id="sig2"><span id="sigName" aria-live="polite"></span><small>assinado por mim</small></div>
+      <div class="stamp" id="stamp">Namorados</div>
+    </div>
+    <p class="reveal"><button class="btn" type="button" id="signBtn">Assinar embaixo</button></p>
+    <p class="reveal">Eu copiei a mensagem e coloquei o meu nome embaixo. Ali começou a nossa relação de verdade.</p>
+    <p class="reveal">Namoro à distância não é fácil. Eu conversei com a sua mãe por telefone, ela conversou com a minha, para saberem que nenhum de nós era uma pessoa ruim e que aquilo era confiável. A gente queria mesmo levar isso adiante.</p>
+  </section>
+
+  <!-- 3. o anel -->
+  <section class="ch" aria-labelledby="h-2018">
+    <div class="when">Fevereiro de 2018</div>
+    <h2 id="h-2018" class="reveal">O <em>anel</em></h2>
+    <p class="reveal">Em fevereiro de 2018 eu perdi a minha avó, de quem eu era muito apegada. Um dia depois do enterro, chegou na minha casa o anel de compromisso, com o seu nome e a nossa data gravados.</p>
+    <p class="reveal">Eu me senti feliz num momento tão triste. Nos dias mais difíceis, você sempre esteve comigo, mesmo de longe.</p>
+
+    <div class="ring-wrap reveal">
+      <button class="ring" id="ring" type="button" aria-label="Girar o anel e ver a gravação">
+        <svg viewBox="0 0 240 240" role="img" aria-label="Anel com Rafael e 04.08.2017 gravados">
+          <defs>
+            <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#fbe7ab"/><stop offset=".45" stop-color="#d9a84c"/><stop offset=".7" stop-color="#f5d98c"/><stop offset="1" stop-color="#a9772a"/>
+            </linearGradient>
+            <path id="circ" d="M120,120 m-88,0 a88,88 0 1,1 176,0 a88,88 0 1,1 -176,0"/>
+          </defs>
+          <circle cx="120" cy="120" r="106" fill="url(#gold)"/>
+          <circle cx="120" cy="120" r="70" fill="#150d14"/>
+          <circle cx="120" cy="120" r="106" fill="none" stroke="#fff4cf" stroke-opacity=".5" stroke-width="2"/>
+          <circle cx="120" cy="120" r="70" fill="none" stroke="#7a5418" stroke-opacity=".7" stroke-width="2"/>
+          <g id="engrave" style="transform-origin:120px 120px">
+            <text font-family="VT323, monospace" font-size="21" fill="#5c3d0e">
+              <textPath href="#circ" startOffset="0" textLength="548" lengthAdjust="spacing">RAFAEL · 04.08.2017 · RAFAEL · 04.08.2017 ·</textPath>
+            </text>
+          </g>
+        </svg>
+      </button>
+      <p class="note" style="max-width:14rem">Toque no anel.</p>
+    </div>
+
+    <figure class="frame reveal">
+      <img src="fotos/ring.jpg" alt="Nina e Rafael abraçados, com o anel de compromisso na mão dela" loading="lazy" width="720" height="1280">
+    </figure>
+  </section>
+
+  <!-- 4. 2020 -->
+  <section class="ch" aria-labelledby="h-2020">
+    <div class="when">2020</div>
+    <h2 id="h-2020" class="reveal">Quinze dias, <em>olho no olho</em></h2>
+    <p class="reveal">Depois de tanto tempo, você veio me ver. Foi pouco antes de o mundo parar. Era noite, e eu esperava na porta da minha casa.</p>
+    <p class="reveal">Quando abri a porta e vi você na minha frente, parecia um sonho. Eu te abracei e o seu cheiro ficou em mim. Naquele dia eu nem tomei banho, porque não queria que o cheiro saísse. Dormi abraçando a mim mesma, a noite em que mais dormi feliz.</p>
+    <p class="reveal">Você ficou numa casinha alugada na minha rua, porque os meus pais me protegem muito e você ainda era um desconhecido para eles. Quando fomos deixar você lá, meus pais voltaram mais à frente para nos dar um tempinho a sós. Foi aí que veio o primeiro beijo. Um selinho humilde, e parecia um sonho.</p>
+
+    <figure class="frame left wide reveal">
+      <img src="fotos/date2020.jpg" alt="Rafael deitado olhando para a câmera, com Nina escondida atrás do ombro dele, data 22/02/20" loading="lazy" width="1100" height="618">
+    </figure>
+
+    <p class="reveal">Foram quinze dias maravilhosos. A gente foi ao centro com a minha família, teve tempo a sós para namorar, conversar olho no olho.</p>
+    <p class="reveal">Aí chegou o dia que eu não queria que chegasse. Na rodoviária, o último abraço pareceu deixar um pedaço de mim ir embora. Eu chorei a volta inteira pra casa. Você disse que também nunca tinha ficado tão triste, e que ainda voltou lá fora da rodoviária pra tentar me abraçar mais uma vez.</p>
+    <p class="reveal">Então a pandemia aconteceu. Metade do nosso namoro foi à distância, e a gente atravessou aquele tempo longe um do outro, com medo de tudo dar errado. Mais uma época difícil que enfrentamos juntos.</p>
+  </section>
+
+  <!-- 5. 2023 -->
+  <section class="ch" aria-labelledby="h-2023">
+    <div class="when">2023</div>
+    <h2 id="h-2023" class="reveal">A distância <em>não coube mais</em></h2>
+    <p class="reveal">Você de Araçatuba, em São Paulo. Eu de Teresina, no Piauí. Sudeste e Nordeste. Arraste a barra e encurte esse caminho.</p>
+
+    <div class="map reveal" id="map">
+      <svg viewBox="0 0 320 300" role="img" aria-label="Mapa esquemático entre Araçatuba e Teresina">
+        <g stroke="#f6ebe6" stroke-opacity=".07">
+          <path d="M0 50H320M0 100H320M0 150H320M0 200H320M0 250H320M50 0V300M100 0V300M150 0V300M200 0V300M250 0V300M300 0V300"/>
+        </g>
+        <line id="mline" x1="116" y1="259" x2="215" y2="50" stroke="#f2899f" stroke-width="2" stroke-dasharray="3 6" stroke-linecap="round"/>
+        <g>
+          <circle cx="215" cy="50" r="7" fill="#ecc878"/>
+          <circle cx="215" cy="50" r="7" fill="#ecc878" class="pulse"/>
+          <text x="205" y="34" text-anchor="end" font-family="Figtree, sans-serif" font-size="13" font-weight="600" fill="#f6ebe6">Teresina, PI</text>
+          <text x="205" y="50" text-anchor="end" font-family="Figtree, sans-serif" font-size="11" fill="#c2abb6">Nina</text>
+        </g>
+        <g id="rnode">
+          <circle id="rdot" cx="116" cy="259" r="7" fill="#f2899f"/>
+          <circle id="rpulse" cx="116" cy="259" r="7" fill="#f2899f" class="pulse"/>
+        </g>
+        <g id="rlabel">
+          <text x="128" y="278" font-family="Figtree, sans-serif" font-size="13" font-weight="600" fill="#f6ebe6">Araçatuba, SP</text>
+          <text x="128" y="293" font-family="Figtree, sans-serif" font-size="11" fill="#c2abb6">Rafael</text>
+        </g>
+      </svg>
+      <div class="km"><strong id="km">1.972</strong><span>km em linha reta</span></div>
+      <input type="range" id="dist" min="0" max="100" value="0" step="1" aria-label="Encurtar a distância entre Rafael e Nina">
+      <p class="map-msg" id="mapMsg">Quase 2 mil km entre nós.</p>
+    </div>
+
+    <p class="reveal">Você tomou uma decisão: não podia ficar longe de mim, o amor que a gente sente era grande demais pra distância caber. Em 2023 você veio morar aqui.</p>
+    <p class="reveal">Desde então tudo tem sido um sonho e um aprendizado constante. O nosso amor amadureceu de um jeito muito bonito.</p>
+  </section>
+
+  <!-- 6. hoje -->
+  <section class="ch" aria-labelledby="h-hoje">
+    <div class="when">Hoje</div>
+    <h2 id="h-hoje" class="reveal">Tempo <em>juntos</em></h2>
+    <div id="day4" class="day4" hidden>Hoje é dia 4. Mais um mês de nós.</div>
+    <div class="count reveal" aria-live="off">
+      <div class="cell"><b id="cy">9</b><span>anos</span></div>
+      <div class="cell"><b id="cm">0</b><span>meses</span></div>
+      <div class="cell"><b id="cd">0</b><span>dias</span></div>
+      <div class="cell"><b id="ch">0</b><span>horas</span></div>
+      <div class="cell"><b id="cmi">0</b><span>minutos</span></div>
+      <div class="cell"><b id="cs">0</b><span>segundos</span></div>
+    </div>
+    <p class="reveal"><span id="totalDays">0</span> dias desde 4 de agosto de 2017. E contando.</p>
+  </section>
+
+  <!-- 7. álbum -->
+  <section class="ch" aria-labelledby="h-album">
+    <div class="when">Álbum</div>
+    <h2 id="h-album" class="reveal">Nós, em <em>fotos</em></h2>
+    <p class="note">Deslize para o lado.</p>
+    <div class="album" tabindex="0" aria-label="Álbum de fotos, role para o lado">
+      <figure class="frame"><img src="fotos/kiss.jpg" alt="Rafael beijando a bochecha de Nina, que sorri de olhos fechados" loading="lazy" width="720" height="960"></figure>
+      <figure class="frame"><img src="fotos/collage.jpg" alt="Três fotos de Nina e Rafael juntos, um beijo na bochecha e olhares para a câmera" loading="lazy" width="1100" height="1100"></figure>
+      <figure class="frame"><img src="fotos/tee.jpg" alt="Nina e Rafael encostados, olhando para a câmera" loading="lazy" width="1029" height="853"></figure>
+      <figure class="frame"><img src="fotos/hearts.jpg" alt="Nina e Rafael sorrindo com filtro de corações nos olhos" loading="lazy" width="720" height="405"></figure>
+      <figure class="frame"><img src="fotos/teal.jpg" alt="Rafael e Nina lado a lado diante de um muro de tijolos" loading="lazy" width="720" height="1280"></figure>
+    </div>
+  </section>
+
+  <!-- 8. cartas -->
+  <section class="ch" aria-labelledby="h-cartas">
+    <div class="when">Cartas</div>
+    <h2 id="h-cartas" class="reveal">Abra <em>quando</em></h2>
+    <p class="reveal">Algumas cartas para guardar. Toque para abrir.</p>
+    <div class="letters reveal" id="letters">
+      <div class="letter">
+        <button type="button" aria-expanded="false">Abra quando sentir saudade<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="body" hidden>
+          <p>Eu conheço bem essa saudade. A gente passou metade da nossa história sentindo ela, com um país inteiro no meio.</p>
+          <p>Agora ela tem um caminho curto. Vem me ver, me abraça, e deixa o seu cheiro em mim de novo.</p>
+        </div>
+      </div>
+      <div class="letter">
+        <button type="button" aria-expanded="false">Abra quando quiser rir<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="body" hidden>
+          <p>“Ei, Shemali, vende a conta?”</p>
+          <p>Eu não vendi a conta. Em troca, ganhei um melhor amigo e depois o amor da minha vida. Foi o melhor negócio que o Warspear já me ofereceu.</p>
+        </div>
+      </div>
+      <div class="letter">
+        <button type="button" aria-expanded="false">Abra quando tiver medo<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="body" hidden>
+          <p>A gente já teve medo de tudo dar errado. Medo da distância, medo da pandemia, medo de não se ver mais.</p>
+          <p>E a gente atravessou. O que vier, a gente já provou que enfrenta junto.</p>
+        </div>
+      </div>
+      <div class="letter">
+        <button type="button" aria-expanded="false">Abra quando precisar lembrar de nós<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="body" hidden>
+          <p>Nos dias mais difíceis da minha vida, você estava lá, mesmo de longe. Quem fica nessas horas não está por acaso.</p>
+          <p>Eu escolho você de novo hoje, e amanhã, e no dia seguinte.</p>
+        </div>
+      </div>
+      <div class="letter lock" id="lockLetter">
+        <button type="button" aria-expanded="false">Abra no nosso casamento<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></button>
+        <div class="body" hidden>
+          <div id="lockPane">
+            <p>Ainda não. Esta carta abre com uma senha: o nome de nós dois.</p>
+            <form class="pw" id="pwForm" autocomplete="off">
+              <label for="pw" class="note">Senha</label>
+              <div class="pwrow">
+                <input id="pw" type="text" autocapitalize="none" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="Digite aqui">
+                <button class="btn" type="submit">Abrir</button>
+              </div>
+              <p class="pwmsg note" id="pwMsg" aria-live="polite"></p>
+            </form>
+          </div>
+          <div class="secret" id="secret" hidden>
+            <p class="big">Do Warspear Online para a vida: vamos ser felizes para sempre.</p>
+            <p>Mas “para sempre” é pouco para tudo o que a gente ainda vai viver.</p>
+            <p>A gente começou numa cidade de Halloween, com uma provocação e uma raiva boba minha. Atravessou a distância, a saudade, a despedida na rodoviária, a pandemia. E em todos os dias difíceis você esteve lá, até quando estava longe.</p>
+            <p>Agora o resto da história a gente escreve lado a lado. Eu te amo hoje, e vou te amar em cada capítulo que ainda não existe.</p>
+            <p class="sig">Meu emoshito.<br>Nina</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. 2027 -->
+  <section class="ch final" aria-labelledby="h-2027">
+    <div class="when">Ano que vem</div>
+    <h2 id="h-2027" class="reveal">Próximo capítulo: <em>2027</em></h2>
+    <p class="reveal">Você sempre me pediu em casamento. Nunca foi uma vez só, era tanto amor que você pedia sempre. É só questão de tempo.</p>
+    <p class="reveal">E eu quero muito casar com você, no ano que vem.</p>
+
+    <figure class="frame wide reveal" style="max-width:21rem">
+      <img src="fotos/polaroid.jpg" alt="Nina e Rafael numa foto estilo polaroid, cercada de corações" loading="lazy" width="1100" height="1371">
+    </figure>
+
+    <p class="reveal">Hoje a música é a que eu escolhi pra gente: <b>Meu Anjo da Guarda</b>, do Biollo. Se ela parou, é só tocar de novo lá em cima.</p>
+    <p class="reveal">Feliz aniversário de namoro, meu amor.</p>
+    <p class="reveal"><button class="btn" type="button" id="loveBtn">Soltar corações</button></p>
+    <div class="sign reveal">Nina</div>
+  </section>
+
+  <footer>Feito para o Rafael, com amor.</footer>
+</main>
+
+<script>
+(function(){
+  var $=function(s){return document.querySelector(s)};
+  var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* música */
+  var audio=$('#song'),pill=$('#pill'),intro=$('#intro');
+  function setPlaying(p){
+    pill.classList.toggle('on',p);
+    pill.setAttribute('aria-pressed',String(p));
+    pill.querySelector('.lbl').textContent=p?'Pausar':'Tocar';
+  }
+  function play(){
+    var r=audio.play();
+    if(r&&r.then){r.then(function(){setPlaying(true)}).catch(function(){setPlaying(false)})}
+    else setPlaying(!audio.paused);
+  }
+  $('#startBtn').addEventListener('click',function(){
+    audio.volume=.85;play();
+    intro.classList.add('gone');
+    setTimeout(function(){intro.hidden=true},800);
+    window.scrollTo(0,0);
+  });
+  pill.addEventListener('click',function(){
+    if(audio.paused)play();else{audio.pause();setPlaying(false)}
+  });
+  setPlaying(false);
+
+  /* aparecer ao rolar */
+  var rv=$$('.reveal');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){
+          e.target.classList.add('in');
+          if(e.target.id==='xp')e.target.classList.add('go');
+          io.unobserve(e.target);
+        }
+      });
+    },{rootMargin:'0px 0px -8% 0px',threshold:.05});
+    rv.forEach(function(el){io.observe(el)});
+  }else{rv.forEach(function(el){el.classList.add('in')})}
+
+  /* conversa do jogo */
+  var lines=[
+    ['nina','Nina','O que é Shemali? Não, não vendo minha conta.'],
+    ['','Rafael','Nada não.']
+  ];
+  var gi=0,log=$('#gameLog'),gnext=$('#gameNext'),gtip=$('#gameTip');
+  gnext.addEventListener('click',function(){
+    if(gi>=lines.length)return;
+    var l=lines[gi++],li=document.createElement('li');
+    li.className='msg'+(l[0]?' '+l[0]:'');
+    var w=document.createElement('span');w.className='who';w.textContent=l[1];
+    li.appendChild(w);li.appendChild(document.createTextNode(l[2]));
+    log.appendChild(li);
+    if(gi>=lines.length){gnext.hidden=true;gtip.textContent='fim da conversa. o resto da história veio depois.'}
+    else gtip.textContent='toque de novo';
+  });
+
+  /* declaração */
+  var signBtn=$('#signBtn');
+  signBtn.addEventListener('click',function(){
+    $('#sigName').textContent='Nina Torres';
+    $('#sig2').classList.add('on');
+    $('#stamp').classList.add('on');
+    signBtn.disabled=true;signBtn.textContent='Assinado';
+  });
+
+  /* anel */
+  var eng=$('#engrave');
+  $('#ring').addEventListener('click',function(){
+    if(reduce||!eng.animate)return;
+    eng.animate([{transform:'rotate(0deg)'},{transform:'rotate(360deg)'}],{duration:2200,easing:'cubic-bezier(.3,.7,.2,1)'});
+  });
+
+  /* mapa */
+  var A={lat:-21.2089,lon:-50.4328},T={lat:-5.0892,lon:-42.8019};
+  function hav(a,b){
+    var R=6371,r=Math.PI/180,dla=(b.lat-a.lat)*r,dlo=(b.lon-a.lon)*r;
+    var x=Math.pow(Math.sin(dla/2),2)+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.pow(Math.sin(dlo/2),2);
+    return 2*R*Math.asin(Math.sqrt(x));
+  }
+  var total=hav(A,T),pa={x:116,y:259},pt={x:215,y:50};
+  var dist=$('#dist'),kmEl=$('#km'),mmsg=$('#mapMsg'),map=$('#map');
+  function fmt(n){return Math.round(n).toLocaleString('pt-BR')}
+  function upd(){
+    var t=dist.value/100,x=pa.x+(pt.x-pa.x)*t,y=pa.y+(pt.y-pa.y)*t;
+    $('#rdot').setAttribute('cx',x);$('#rdot').setAttribute('cy',y);
+    $('#rpulse').setAttribute('cx',x);$('#rpulse').setAttribute('cy',y);
+    $('#mline').setAttribute('x1',x);$('#mline').setAttribute('y1',y);
+    $('#rlabel').setAttribute('transform','translate('+(x-pa.x)+','+(y-pa.y)+')');
+    $('#rlabel').style.opacity=t>.82?0:1;
+    kmEl.textContent=fmt(total*(1-t));
+    var done=t>=1;
+    map.classList.toggle('done',done);
+    if(done)mmsg.textContent='Em 2023 a distância acabou. Você veio, e a gente ficou perto.';
+    else if(t>.5)mmsg.textContent='Cada quilômetro a menos era um pedaço de saudade a menos.';
+    else mmsg.textContent='Quase 2 mil km entre nós.';
+  }
+  dist.addEventListener('input',upd);upd();
+
+  /* contador */
+  function dim(y,m){return new Date(y,m,0).getDate()}
+  function tick(){
+    var n=new Date(),st=new Date(2017,7,4,0,0,0);
+    var y=n.getFullYear()-2017,m=n.getMonth()-7,d=n.getDate()-4;
+    if(d<0){m--;d+=dim(n.getFullYear(),n.getMonth())}
+    if(m<0){y--;m+=12}
+    $('#cy').textContent=y;$('#cm').textContent=m;$('#cd').textContent=d;
+    $('#ch').textContent=n.getHours();$('#cmi').textContent=n.getMinutes();$('#cs').textContent=n.getSeconds();
+    $('#totalDays').textContent=Math.floor((n-st)/864e5).toLocaleString('pt-BR');
+    $('#day4').hidden=n.getDate()!==4;
+  }
+  tick();setInterval(tick,1000);
+
+  /* cartas */
+  $$('.letter > button').forEach(function(b){
+    b.addEventListener('click',function(){
+      var l=b.parentNode,body=l.querySelector('.body'),open=body.hidden;
+      body.hidden=!open;l.classList.toggle('open',open);b.setAttribute('aria-expanded',String(open));
+      if(l.classList.contains('lock')&&open&&!reduce){l.classList.remove('shake');void l.offsetWidth;l.classList.add('shake')}
+    });
+  });
+
+  /* senha da carta */
+  function norm(s){return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/&/g,'e').replace(/[^a-z]/g,'')}
+  var tries=0,pwMsg=$('#pwMsg'),lockL=$('#lockLetter');
+  $('#pwForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var v=norm($('#pw').value);
+    if(v==='ninaerafael'||v==='rafaelenina'){
+      $('#lockPane').hidden=true;$('#secret').hidden=false;
+      lockL.classList.remove('lock');
+      lockL.querySelector('button').firstChild.textContent='Carta do nosso casamento';
+      lockL.querySelector('button svg').innerHTML='<path d="M6 9l6 6 6-6"/>';
+      if(!reduce){
+        var r=lockL.getBoundingClientRect(),cx=Math.min(innerWidth-20,Math.max(20,r.left+r.width/2)),cy=Math.min(innerHeight-60,Math.max(80,r.top+60));
+        for(var i=0;i<22;i++){
+          var h=document.createElement('span');
+          h.className='heart';h.textContent='♥';
+          h.style.left=cx+'px';h.style.top=cy+'px';
+          h.style.setProperty('--dx',((Math.random()-.5)*300)+'px');
+          h.style.setProperty('--dy',(-60-Math.random()*220)+'px');
+          h.style.animationDelay=(Math.random()*.2)+'s';
+          h.style.fontSize=(1+Math.random()*1.3)+'rem';
+          document.body.appendChild(h);
+          (function(el){setTimeout(function(){el.remove()},2100)})(h);
+        }
+      }
+    }else{
+      tries++;
+      pwMsg.textContent=tries>=2?'Ainda não. Dica: são os nossos dois nomes, ligados por um “e”.':'Não é essa. Tente de novo.';
+      if(!reduce){lockL.classList.remove('shake');void lockL.offsetWidth;lockL.classList.add('shake')}
+    }
+  });
+
+  /* corações */
+  $('#loveBtn').addEventListener('click',function(e){
+    if(reduce)return;
+    var r=e.currentTarget.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+    for(var i=0;i<26;i++){
+      var h=document.createElement('span');
+      h.className='heart';h.textContent='♥';
+      h.style.left=cx+'px';h.style.top=cy+'px';
+      h.style.setProperty('--dx',((Math.random()-.5)*340)+'px');
+      h.style.setProperty('--dy',(-80-Math.random()*260)+'px');
+      h.style.animationDelay=(Math.random()*.25)+'s';
+      h.style.fontSize=(1+Math.random()*1.4)+'rem';
+      document.body.appendChild(h);
+      (function(el){setTimeout(function(){el.remove()},2100)})(h);
+    }
+  });
+})();
+</script>
+</body>
+</html>
